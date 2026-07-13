@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const { validateUrl } = require('./utils/urlValidator');
+const isAuth = require('./middleware/is-auth');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,6 +13,13 @@ const port = process.env.PORT || 3000;
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(helmet());
 app.use(bodyParser.json());
+
+// Rate Limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
 // URL Validation Middleware
 app.use((req, res, next) => {
@@ -23,6 +32,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// Authentication Middleware
+app.use(isAuth);
+
 // Example Route
 app.post('/submit-url', (req, res) => {
     const url = req.body.url;
@@ -32,13 +44,4 @@ app.post('/submit-url', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-
-const app = express();
-app.use(cors());
-app.use(helmet());
-
-// Other middleware and routes
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
 });
