@@ -18,6 +18,7 @@ EXPOSE 3001
 
 # Define environment variable
 ENV PORT=3001
+ENV REACT_APP_API_URL=http://localhost:3000
 
 # Run app.py when the container launches
 CMD ["npm", "start"]

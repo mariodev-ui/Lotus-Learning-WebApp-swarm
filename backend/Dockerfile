@@ -18,6 +18,10 @@ EXPOSE 3000
 
 # Define environment variable
 ENV PORT=3000
+ENV CORS_ORIGIN=http://localhost:3001
+ENV JWT_SECRET=your_jwt_secret_here
+ENV EMAIL_USER=your_email_user_here
+ENV EMAIL_PASSWORD=your_email_password_here
 
 # Run app.py when the container launches
 CMD ["node", "server.js"]
