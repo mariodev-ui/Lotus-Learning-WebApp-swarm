@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 module.exports = {
     sendEmail: async (to, subject, text) => {
         // Validate recipient email
-        if (!validateUrl(to)) {
+        if (!validateEmail(to)) {
             throw new Error('Invalid email address');
         }
 
@@ -32,11 +32,7 @@ module.exports = {
     },
 };
 
-function validateUrl(input) {
-    try {
-        new URL(input);
-        return true;
-    } catch (e) {
-        return false;
-    }
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
 }
