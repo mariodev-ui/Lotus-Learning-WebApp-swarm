@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const { validateUrl } = require('./utils/urlValidator');
 const isAuth = require('./middleware/is-auth');
+const logger = require('./utils/logger');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
     if (req.method === 'POST' && req.body.url) {
         const url = req.body.url;
         if (!validateUrl(url)) {
+            logger.error({ message: 'Invalid URL', url });
             return res.status(400).json({ error: 'Invalid URL' });
         }
     }
@@ -38,10 +40,11 @@ app.use(isAuth);
 // Example Route
 app.post('/submit-url', (req, res) => {
     const url = req.body.url;
+    logger.info({ message: 'URL submitted successfully', url });
     // Process the URL
     res.json({ message: 'URL submitted successfully', url });
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    logger.info(`Server is running on port ${port}`);
 });
