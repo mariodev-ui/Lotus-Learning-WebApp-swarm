@@ -45,6 +45,11 @@ app.post('/submit-url', (req, res) => {
     res.json({ message: 'URL submitted successfully', url });
 });
 
+// Protected Routes
+app.get('/protected-data', (req, res) => {
+    res.json({ message: 'This is protected data' });
+});
+
 app.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
 });
